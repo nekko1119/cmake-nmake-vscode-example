@@ -7,6 +7,8 @@ file(GLOB_RECURSE FILES ./src/*.cpp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-fix;-fix-errors")
+
 add_compile_definitions(UNICODE _UNICODE)
 include_directories("$ENV{DXSDK_DIR}/Include")
 link_directories("$ENV{DXSDK_DIR}/Lib/x64")
@@ -64,8 +66,5 @@ if (MSVC)
 else()
   message(FATAL_ERROR "this project supports msvc only")
 endif()
-
-message(STATUS ${CMAKE_CXX_FLAGS})
-message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
 
 add_executable(vscodecpp WIN32 ${FILES} ./src/resource.rc)

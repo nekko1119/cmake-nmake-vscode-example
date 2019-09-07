@@ -1,7 +1,5 @@
 // !!! THIS FILE IS A COPY OF DIRECTX TUTORIAL SAMPLE !!!
 
-
-
 //-----------------------------------------------------------------------------
 // File: Vertices.cpp
 //
@@ -25,9 +23,9 @@
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
-LPDIRECT3D9 g_pD3D = NULL; // Used to create the D3DDevice
-LPDIRECT3DDEVICE9 g_pd3dDevice = NULL; // Our rendering device
-LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL; // Buffer to hold vertices
+LPDIRECT3D9 g_pD3D = nullptr; // Used to create the D3DDevice
+LPDIRECT3DDEVICE9 g_pd3dDevice = nullptr; // Our rendering device
+LPDIRECT3DVERTEXBUFFER9 g_pVB = nullptr; // Buffer to hold vertices
 
 // A structure for our custom vertex type
 struct CUSTOMVERTEX {
@@ -45,7 +43,9 @@ struct CUSTOMVERTEX {
 HRESULT
 InitD3D(HWND hWnd) {
   // Create the D3D object.
-  if (NULL == (g_pD3D = Direct3DCreate9(D3D_SDK_VERSION))) return E_FAIL;
+  if (nullptr == (g_pD3D = Direct3DCreate9(D3D_SDK_VERSION))) {
+    return E_FAIL;
+  }
 
   // Set up the structure used to create the D3DDevice
   D3DPRESENT_PARAMETERS d3dpp;
@@ -105,7 +105,7 @@ HRESULT InitVB() {
   // (from the default pool) to hold all our 3 custom vertices. We also
   // specify the FVF, so the vertex buffer knows what data it contains.
   if (FAILED(g_pd3dDevice->CreateVertexBuffer(
-        3 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB, NULL))) {
+        3 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB, nullptr))) {
     return E_FAIL;
   }
 
@@ -113,8 +113,10 @@ HRESULT InitVB() {
   // gain access to the vertices. This mechanism is required becuase vertex
   // buffers may be in device memory.
   VOID* pVertices;
-  if (FAILED(g_pVB->Lock(0, sizeof(vertices), (void**) &pVertices, 0))) return E_FAIL;
-  memcpy(pVertices, vertices, sizeof(vertices));
+  if (FAILED(g_pVB->Lock(0, sizeof(vertices), (void**) &pVertices, 0))) {
+    return E_FAIL;
+  }
+  memcpy(pVertices, &vertices, sizeof(vertices));
   g_pVB->Unlock();
 
   return S_OK;
@@ -125,11 +127,17 @@ HRESULT InitVB() {
 // Desc: Releases all previously initialized objects
 //-----------------------------------------------------------------------------
 VOID Cleanup() {
-  if (g_pVB != NULL) g_pVB->Release();
+  if (g_pVB != nullptr) {
+    g_pVB->Release();
+  }
 
-  if (g_pd3dDevice != NULL) g_pd3dDevice->Release();
+  if (g_pd3dDevice != nullptr) {
+    g_pd3dDevice->Release();
+  }
 
-  if (g_pD3D != NULL) g_pD3D->Release();
+  if (g_pD3D != nullptr) {
+    g_pD3D->Release();
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -138,7 +146,7 @@ VOID Cleanup() {
 //-----------------------------------------------------------------------------
 VOID Render() {
   // Clear the backbuffer to a blue color
-  g_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 255), 1.0f, 0);
+  g_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 255), 1.0f, 0);
 
   // Begin the scene
   if (SUCCEEDED(g_pd3dDevice->BeginScene())) {
@@ -159,7 +167,7 @@ VOID Render() {
   }
 
   // Present the backbuffer contents to the display
-  g_pd3dDevice->Present(NULL, NULL, NULL, NULL);
+  g_pd3dDevice->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 //-----------------------------------------------------------------------------
@@ -181,7 +189,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 // Name: wWinMain()
 // Desc: The application's entry point
 //-----------------------------------------------------------------------------
-INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int) {
+INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE /*unused*/, LPSTR /*unused*/, int /*unused*/) {
   UNREFERENCED_PARAMETER(hInst);
 
   // Register the window class
@@ -190,28 +198,28 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int) {
                    MsgProc,
                    0L,
                    0L,
-                   GetModuleHandle(NULL),
+                   GetModuleHandle(nullptr),
                    LoadIcon(hInst, TEXT("MAINICON")),
-                   NULL,
-                   NULL,
-                   NULL,
-                   L"D3D Tutorial",
-                   NULL};
+                   nullptr,
+                   nullptr,
+                   nullptr,
+                   TEXT("D3D Tutorial"),
+                   nullptr};
   RegisterClassEx(&wc);
 
   // Create the application's window
   HWND hWnd = CreateWindow(
-    L"D3D Tutorial",
-    L"D3D Tutorial 02: Vertices",
+    TEXT("D3D Tutorial"),
+    TEXT("D3D Tutorial 02: Vertices"),
     WS_OVERLAPPEDWINDOW,
     100,
     100,
     300,
     300,
-    NULL,
-    NULL,
+    nullptr,
+    nullptr,
     wc.hInstance,
-    NULL);
+    nullptr);
 
   // Initialize Direct3D
   if (SUCCEEDED(InitD3D(hWnd))) {
@@ -225,14 +233,15 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int) {
       MSG msg;
       ZeroMemory(&msg, sizeof(msg));
       while (msg.message != WM_QUIT) {
-        if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
+        if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
           TranslateMessage(&msg);
           DispatchMessage(&msg);
-        } else
+        } else {
           Render();
+        }
       }
     }
   }
-  UnregisterClass(L"D3D Tutorial", wc.hInstance);
+  UnregisterClass(TEXT("D3D Tutorial"), wc.hInstance);
   return 0;
 }
