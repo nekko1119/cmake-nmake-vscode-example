@@ -20,16 +20,14 @@ if (MSVC)
 
   # release and debug options
 
-  # optimization
+  # optimization(release)
   if (CMAKE_CXX_FLAGS_RELEASE MATCHES "/O[dx12]")
     string(REGEX REPLACE "/O[dx12]" "/O2" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
   else()
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
   endif()
 
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
-
-
+  # optimization(debug)
   if (CMAKE_CXX_FLAGS_DEBUG MATCHES "/O[dx12]")
     string(REGEX REPLACE "/O[dx12]" "/Od" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
   else()
@@ -54,7 +52,7 @@ if (MSVC)
   # linker options
 
   # architecture
-  # this configuration may not need. cmake determines architecture from environment
+  # this configuration may not be needed. cmake determines architecture from environment
   if(CMAKE_EXE_LINKER_FLAGS MATCHES "/machine:(X86|x86|X64|x64)")
     string(REGEX REPLACE "/machine:(X86|x86|X64|x64)" "/machine:x64" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
   else()
